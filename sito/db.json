@@ -1,0 +1,20 @@
+{
+    "utenti" : [
+        
+     {
+        "nome": "Augustin",
+        "cognome": "Doloscan"
+    },
+    {
+        "nome": "Mattia",
+        "cognome": "Gasperini"
+    },
+    {
+        "nome": "Mattia",
+        "cognome":"Frattina"
+    },
+    {
+        "nome": "Leonardo",
+        "cognome": "D'Alessio"}
+    ]
+}
