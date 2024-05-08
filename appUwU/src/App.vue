@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <header>
-      <h1>Scommesse UwU</h1>
+      <div class="topnav">
+        <router-link to="/"><img id="home"src="./assets/home.png"></router-link>
+        <router-link to="/add-bet" id="add">Admin</router-link>
+      </div>
     </header>
     <main>
       <router-view></router-view>
@@ -29,9 +32,10 @@ export default {
 }
 
 header {
-  background-color: #333;
+  background-color: #fff;
   color: #fff;
-  padding: 10px;
+  padding: 5px;
+border: 3px solid black;
 }
 
 header h1 {
@@ -48,6 +52,20 @@ footer {
   padding: 10px;
   text-align: center;
   margin-top: auto; /* This pushes the footer to the bottom */
+}
+#home{
+  width: 45px;
+  height: 40px;
+  border: 0px solid black;
+  border-radius: 20px;
+}
+#home:hover{
+  background-color: gray;
+}
+#add{
+  color: black;
+  
+  /*centered*/  
 }
 
 </style>

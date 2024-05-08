@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h2>Bet Manager</h2>
+      <h2>Manager di scommesse</h2>
       <!-- Form per aggiungere una nuova scommessa -->
       <form @submit.prevent="addBet">
         <label for="betName">Bet Name:</label>
@@ -11,7 +11,7 @@
       <!-- Elenco delle scommesse -->
       <ul>
         <li v-for="(bet, index) in bets" :key="index">
-          {{ bet.name }}
+          {{ bet.title }}
           <button @click="removeBet(index)">Remove</button>
         </li>
       </ul>
