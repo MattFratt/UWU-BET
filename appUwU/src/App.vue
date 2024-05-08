@@ -4,6 +4,7 @@
       <div class="topnav">
         <router-link to="/"><img id="home"src="./assets/home.png"></router-link>
         <router-link to="/add-bet" id="add">Admin</router-link>
+        <h1>UwU Bets</h1>
       </div>
     </header>
     <main>
@@ -40,6 +41,8 @@ border: 3px solid black;
 
 header h1 {
   margin: 0;
+  text-align: center;
+  color: black;
 }
 
 main {

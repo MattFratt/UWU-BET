@@ -14,7 +14,7 @@
       <h3>Scommesse recenti</h3>
       <ul>
         <li v-for="bet in bets" :key="bet.id">
-          {{ bet.title }} Q: {{bet.quota}}
+          {{ bet.title }} Q: {{bet.quota}} scommettitori {{bet.users}}
           <button class="edit"@click="editBet(bet)">Modifica</button>
         </li>
       </ul>
