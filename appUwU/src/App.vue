@@ -7,7 +7,7 @@
       <router-view></router-view>
     </main>
     <footer>
-      <p>© Via Circonvallazione 57</p>
+      <p id="footer-content">© Via Circonvallazione 57</p>
     </footer>
   </div>
 </template>
@@ -23,7 +23,9 @@ export default {
 /* Puoi aggiungere stili globali qui se necessario */
 #app {
   font-family: Arial, sans-serif;
-  /* Aggiungi altri stili dell'applicazione qui */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* This ensures that #app takes up at least the full height of the viewport */
 }
 
 header {
@@ -45,5 +47,7 @@ footer {
   color: #fff;
   padding: 10px;
   text-align: center;
+  margin-top: auto; /* This pushes the footer to the bottom */
 }
+
 </style>

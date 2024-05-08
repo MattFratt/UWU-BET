@@ -1,9 +1,14 @@
 <template>
     <div>
+      <div class="topnav">
+        <router-link to="/">Home</router-link>
+        <router-link to="/add-bet">Aggiungi scommessa</router-link>
+      </div>
       <h2>Add Bet</h2>
       <form @submit.prevent="addBet">
         <label for="title">Title:</label>
         <input type="text" id="title" v-model="title" required>
+        <input type="number" id="quota" v-model="quota" required>
         <!-- Aggiungi altri campi per le informazioni della scommessa se necessario -->
   
         <button type="submit">Add Bet</button>
@@ -20,15 +25,16 @@
     name: 'AddBet',
     data() {
       return {
-        title: ''
-        // Aggiungi altri dati della scommessa se necessario
-      };
+        title: '',
+        quota:  0
+    };
     },
     methods: {
       async addBet() {
         try {
           const betData = {
-            title: this.title
+            title: this.title,
+            quota: this.quota
             // Aggiungi altri campi della scommessa se necessario
           };
           
@@ -53,7 +59,9 @@
   </script>
   
   <style scoped>
-  /* Stili specifici per il componente AddBet */
-  /* Puoi aggiungere stili specifici qui se necessario */
+  .topnav{
+    background-color: black;
+    
+  }
   </style>
   

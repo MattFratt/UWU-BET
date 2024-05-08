@@ -1,18 +1,21 @@
 <template>
     <div>
-      <h2>Home</h2>
-      <p>Welcome to Our Betting Website</p>
+      <div class="topnav">
+        <router-link to="/">Home</router-link>
+        <router-link to="/add-bet">Aggiungi scommessa</router-link>
+      </div>
+      <p>Benvenuti nel miglior sito di scommesse doliche</p>
   
       <!-- Visualizzazione delle scommesse -->
       <div v-if="bets.length > 0">
         <h3>Recent Bets</h3>
         <ul>
-          <li v-for="bet in bets" :key="bet.id">{{ bet.title }}</li>
+          <li v-for="bet in bets" :key="bet.id">{{ bet.title }} <div id="quota">{{bet.quota}} </div></li>
         </ul>
       </div>
   
       <!-- Link per aggiungere una nuova scommessa -->
-      <router-link to="/add-bet">Add a Bet</router-link>
+      <router-link to="/add-bet">Aggiungi scommessa</router-link>
     </div>
   </template>
   
@@ -37,7 +40,7 @@
           this.bets.push({ id: doc.id, ...doc.data() });
         });
       } catch (error) {
-        console.error('Error loading bets:', error);
+        console.error('Errore nel caricare le bet:', error);
         // Gestisci eventuali errori durante il caricamento delle scommesse
       }
     }
@@ -45,7 +48,8 @@
   </script>
   
   <style scoped>
-  /* Stili specifici per la Home Page */
-  /* Puoi aggiungere stili specifici qui se necessario */
+  #quota{
+    background-color: green;
+  }
   </style>
   
