@@ -1,9 +1,29 @@
 <template>
-  <div>
-    <h2>Login</h2>
-    <input type="email" v-model="email" placeholder="Email">
-    <input type="password" v-model="password" placeholder="Password">
-    <button @click="login">Login</button>
+  <div class="section">
+    <div class="container">
+      <h2 class="title">Login</h2>
+      <div class="field">
+        <p class="control has-icons-left has-icons-right">
+          <input class="input" type="email" v-model="email" placeholder="Email">
+          <span class="icon is-small is-left">
+            <i class="fas fa-envelope"></i>
+          </span>
+        </p>
+      </div>
+      <div class="field">
+        <p class="control has-icons-left">
+          <input class="input" type="password" v-model="password" placeholder="Password">
+          <span class="icon is-small is-left">
+            <i class="fas fa-lock"></i>
+          </span>
+        </p>
+      </div>
+      <div class="field">
+        <p class="control">
+          <button class="button is-success" @click="login">Login</button>
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 

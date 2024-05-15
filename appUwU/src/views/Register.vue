@@ -1,10 +1,30 @@
 <template>
-  <div>
-    <h2>Registrazione</h2>
-    <input type="email" v-model="email" placeholder="Email">
-    <input type="password" v-model="password" placeholder="Password">
-    <button @click="register">Registrati</button>
-    <h1> {{ errorMessage }}</h1>
+  <div class="section">
+    <div class="container">
+      <h2 class="title">Registrazione</h2>
+      <div class="field">
+        <p class="control has-icons-left has-icons-right">
+          <input class="input" type="email" v-model="email" placeholder="Email">
+          <span class="icon is-small is-left">
+            <i class="fas fa-envelope"></i>
+          </span>
+        </p>
+      </div>
+      <div class="field">
+        <p class="control has-icons-left">
+          <input class="input" type="password" v-model="password" placeholder="Password">
+          <span class="icon is-small is-left">
+            <i class="fas fa-lock"></i>
+          </span>
+        </p>
+      </div>
+      <div class="field">
+        <p class="control">
+          <button class="button is-success" @click="register">Registrati</button>
+        </p>
+      </div>
+      <h1 class="title is-4 has-text-danger"> {{ errorMessage }}</h1>
+    </div>
   </div>
 </template>
 
