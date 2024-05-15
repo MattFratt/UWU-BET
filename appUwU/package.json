@@ -11,7 +11,7 @@
   "dependencies": {
     "bulma": "^1.0.0",
     "firebase": "^10.11.1",
-    "vue": "^3.4.21",
+    "vue": "^3.4.27",
     "vue-router": "^4.0.13"
   },
   "devDependencies": {

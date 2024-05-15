@@ -1,16 +1,19 @@
 <template>
+
   <div class="container">
     <p class="title">Benvenuti nel miglior sito di scommesse doliche</p>
     <p class="subtitle">Accedi o registrati per iniziare a scommettere!</p>
     <router-link v-if="!isLoggedIn" class="button is-primary" to="/login">Login</router-link>
     <router-link v-if="!isLoggedIn" class="button is-link" to="/register">Registrati</router-link>
-    <button v-if="isLoggedIn" class="button is-danger" @click="logout">Logout</button>
 
-    <h1 class="title">Ciao {{ currentUserEmail }} </h1>
+
+
+     <button v-if="isLoggedIn" class="button is-danger" @click="logout">Logout </button>
+     <h1 v-if="isLoggedIn" class="title" id="accountAccesso">Bentornato <div class="emailMain">{{ currentUserEmail }}</div> ! </h1>
     <!-- Visualizza la lista degli utenti -->
     <div>
       <h2 class="title">Lista Utenti</h2>
-      <ul>
+      <ul class="container">
         <li v-for="user in users" :key="user.id">
           {{ user.email }} - Saldo: <span class="tag is-success">{{ user.money }}</span>
         </li>
@@ -21,12 +24,13 @@
     <p class="tag is-info">UwU disponibili: {{ money }}</p>
 
     <!-- Visualizza le scommesse recenti -->
-    <div v-if="bets.length > 0" class="box">
+    <div class="container" v-if="bets.length > 0" >
       <h3 class="title">Scommesse recenti</h3>
-      <ul>
+      <ul >
         <li v-for="bet in bets" :key="bet.id">
-          {{ bet.title }} Quota: {{ bet.quota }}
-          <button class="button is-danger" @click="placeBet(bet)">Scommetti</button>
+        <div class="scommessa"> {{ bet.title }} | Quota: {{ bet.quota }}</div>
+        aggiungere timer scadenza scommessa
+          <button class="button is-danger" @click="placeBet(bet)">Scommetti subito!</button>
         </li>
       </ul>
     </div>
@@ -34,6 +38,7 @@
       <p>Nessuna scommessa disponibile al momento.</p>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -236,22 +241,16 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-  background-color: #f5f5f5;
-  border-radius: 10px;
-}
+
+
 
 p {
   margin-bottom: 10px;
-  color: #333;
+
 }
 
 a {
-  color: #007bff;
+
   text-decoration: none;
   margin-right: 10px;
   padding: 10px 20px;
@@ -268,7 +267,7 @@ a:hover {
 h1,
 h2,
 h3 {
-  color: #333;
+
 }
 
 ul {
@@ -303,7 +302,7 @@ li {
   font-size: 16px;
   cursor: pointer;
   background-color: #007bff;
-  color: #fff;
+
   border: none;
   border-radius: 5px;
 }
@@ -317,4 +316,12 @@ li {
   padding: 20px;
   border-radius: 10px;
 }
+.emailMain{
+  display: inline-block;
+  color: rgb(171, 253, 76);
+}
+#accountAccesso{
+  font-size: medium;
+}
+
 </style>

@@ -34,10 +34,17 @@ textarea {
 }
 
 /* Global styles */
+
+
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
   color: #333;
+  background-image: url('https://giffiles.alphacoders.com/233/23367.gif');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -45,7 +52,41 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 button {
+  padding-top: 1em;
   cursor: pointer;
 }
 
 /* Add your custom global styles here */
+.title{
+  display: inline-block;
+  padding-top: 0.5em;
+  font-size: small;
+  background-color: rgb(51, 51, 51,0.5);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 0.5em;
+  border-radius: 4em;
+}
+
+footer{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.scommessa{
+  background-color: rgb(175, 108, 21,0.5);
+  font-size: large;
+
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  color: aliceblue;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
