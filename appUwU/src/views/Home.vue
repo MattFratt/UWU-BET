@@ -1,31 +1,32 @@
 <template>
-  <div>
-    <p>Benvenuti nel miglior sito di scommesse doliche</p>
-    <p>Accedi o registrati per iniziare a scommettere!</p>
-    <router-link to="/login">Login</router-link>
-    <router-link to="/register">Registrati</router-link>
+  <div class="container">
+    <p class="title">Benvenuti nel miglior sito di scommesse doliche</p>
+    <p class="subtitle">Accedi o registrati per iniziare a scommettere!</p>
+    <router-link v-if="!isLoggedIn" class="button is-primary" to="/login">Login</router-link>
+    <router-link v-if="!isLoggedIn" class="button is-link" to="/register">Registrati</router-link>
+    <button v-if="isLoggedIn" class="button is-danger" @click="logout">Logout</button>
 
-    <h1>Ciao {{ currentUserEmail }} </h1>
+    <h1 class="title">Ciao {{ currentUserEmail }} </h1>
     <!-- Visualizza la lista degli utenti -->
     <div>
-      <h2>Lista Utenti</h2>
+      <h2 class="title">Lista Utenti</h2>
       <ul>
         <li v-for="user in users" :key="user.id">
-          {{ user.email }} - Saldo: {{ user.money }}
+          {{ user.email }} - Saldo: <span class="tag is-success">{{ user.money }}</span>
         </li>
       </ul>
     </div>
 
     <!-- Visualizza il saldo dell'utente -->
-    <p>Denaro disponibile: {{ money }}</p>
+    <p class="tag is-info">UwU disponibili: {{ money }}</p>
 
     <!-- Visualizza le scommesse recenti -->
-    <div v-if="bets.length > 0">
-      <h3>Scommesse recenti</h3>
+    <div v-if="bets.length > 0" class="box">
+      <h3 class="title">Scommesse recenti</h3>
       <ul>
         <li v-for="bet in bets" :key="bet.id">
           {{ bet.title }} Quota: {{ bet.quota }}
-          <button @click="placeBet(bet)">Scommetti</button>
+          <button class="button is-danger" @click="placeBet(bet)">Scommetti</button>
         </li>
       </ul>
     </div>
@@ -41,6 +42,7 @@ import { db } from '../firebase/firebaseConfig.js';
 import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { auth } from '../firebase/firebaseConfig.js';
 import { loadUsers } from '../services/userService';
+import { onAuthStateChanged } from 'firebase/auth';
 
 
 
@@ -48,7 +50,8 @@ export default {
   name: 'Home',
   data() {
     return {
-      currentUserEmail: '',
+      currentUserEmail: null,
+      isLoggedIn: false,
       users: [],
       bets: [],
       money: 0
@@ -68,12 +71,26 @@ export default {
     } catch (error) {
       console.error('Errore nel caricare le scommesse:', error);
     }
-
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.currentUserEmail = user.email;
+        this.isLoggedIn = true;
+      } else {
+        this.currentUserEmail = null;
+        this.isLoggedIn = false;
+      }
+    });
     // Carica il saldo dell'utente corrente
     this.loadUserMoney();
   },
   methods: {
-
+    logout() {
+      auth.signOut().then(() => {
+        this.isLoggedIn = false;
+      }).catch((error) => {
+        console.error('Error logging out:', error);
+      });
+    },
     async loadUsers() {
       try {
         this.users = await loadUsers();
@@ -219,54 +236,59 @@ export default {
 </script>
 
 <style scoped>
-/* Stili specifici per Home.vue */
-
-/* Stile per il contenitore principale */
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
 }
 
-/* Stile per i paragrafi */
 p {
   margin-bottom: 10px;
+  color: #333;
 }
 
-/* Stile per i link */
 a {
   color: #007bff;
   text-decoration: none;
   margin-right: 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  background-color: #0056b3;
 }
 
-/* Stile per l'header */
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
+h1,
+h2,
+h3 {
+  color: #333;
 }
 
-/* Stile per la lista degli utenti */
 ul {
   list-style-type: none;
   padding: 0;
 }
 
 li {
+  color: #000000;
   margin-bottom: 10px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-/* Stile per il saldo dell'utente */
 .balance {
   font-weight: bold;
+  color: #007bff;
 }
 
-/* Stile per le scommesse recenti */
 .recent-bets {
   margin-top: 20px;
 }
@@ -276,8 +298,7 @@ li {
   margin-bottom: 10px;
 }
 
-/* Stile per i pulsanti */
-button {
+.bet-button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -287,7 +308,13 @@ button {
   border-radius: 5px;
 }
 
-button:hover {
+.bet-button:hover {
   background-color: #0056b3;
+}
+
+.box {
+  background-color: #c9c9c9;
+  padding: 20px;
+  border-radius: 10px;
 }
 </style>

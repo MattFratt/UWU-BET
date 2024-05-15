@@ -1,21 +1,35 @@
 <template>
-  <div>
-    <h2>Aggiungi / Modifica scommessa</h2>
-    <form @submit.prevent="betId ? updateBet() : addBet()">
-      <label for="title">Evento:</label>
-      <input type="text" id="title" v-model="title" required>
-      <label for="quota">Quota:</label>
-      <input type="number" id="quota" v-model="quota" required placeholder="UwU">
-      <button type="submit" id="invia">{{ betId ? 'Aggiorna' : 'Invia' }}</button>
-      <button type="button" id="annulla" v-if="betId" @click="cancelEdit">Annulla</button> <!-- Add a Cancel button -->
-      <button type="button" id="elimina" v-if="betId" @click="deleteBet">Elimina</button> <!-- Add a Delete button -->
-    </form>
-    <div v-if="bets.length > 0">
-      <h3>Scommesse recenti</h3>
+  <div class="container">
+    <h2 class="title">Aggiungi / Modifica scommessa</h2>
+    <div class="field">
+      <label class="label" for="title">Evento:</label>
+      <div class="control">
+        <input class="input" type="text" id="title" v-model="title" required>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="quota">Quota:</label>
+      <div class="control">
+        <input class="input" type="number" id="quota" v-model="quota" required placeholder="UwU">
+      </div>
+    </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" type="submit" id="invia">{{ betId ? 'Aggiorna' : 'Invia' }}</button>
+      </div>
+      <div class="control">
+        <button class="button is-light" type="button" id="annulla" v-if="betId" @click="cancelEdit">Annulla</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger" type="button" id="elimina" v-if="betId" @click="deleteBet">Elimina</button>
+      </div>
+    </div>
+    <div v-if="bets.length > 0" class="box">
+      <h3 class="title">Scommesse recenti</h3>
       <ul>
         <li v-for="bet in bets" :key="bet.id">
           {{ bet.title }} Q: {{ bet.quota }} scommettitori {{ bet.users }}
-          <button class="edit" @click="editBet(bet)">Modifica</button>
+          <button class="button is-small is-info" @click="editBet(bet)">Modifica</button>
         </li>
       </ul>
     </div>
@@ -101,63 +115,10 @@ export default {
 </script>
 
 <style scoped>
-.topnav {
-  background-color: black;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-input,
-button {
-  padding: 0.5rem;
-}
-
-button {
-  cursor: pointer;
-}
-
-.edit:hover {
-  background-color: gray;
-  color: white;
-  border-radius: 5px;
-}
-
-#annulla {
-  border: 4px solid blue;
-  background-color: lightblue;
-}
-
-#annulla:hover {
-  background-color: blue;
-  color: white;
-  border-radius: 5px;
-}
-
-#elimina {
-  border: 4px solid red;
-  background-color: lightcoral;
-}
-
-#elimina:hover {
-  background-color: red;
-  color: white;
-  border-radius: 5px;
-}
-
-#invia {
-  border: 4px solid green;
-  background-color: lightgreen;
-}
-
-#invia:hover {
-  background-color: green;
-  color: white;
-  border-radius: 5px;
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 ul {
@@ -167,5 +128,21 @@ ul {
 
 li {
   margin-bottom: 1rem;
+}
+
+h1,
+h2,
+h3 {
+  color: #333;
+}
+
+.box,
+.input {
+  background-color: #c9c9c9c9;
+  color: #000000
+}
+
+.label {
+  color: #000000
 }
 </style>

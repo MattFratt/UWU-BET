@@ -23,26 +23,27 @@ export default {
 </script>
 
 <style scoped>
-/* Stili specifici per l'applicazione */
-/* Puoi aggiungere stili globali qui se necessario */
 #app {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* This ensures that #app takes up at least the full height of the viewport */
 }
 
 header {
   background-color: #fff;
-  color: #fff;
   padding: 5px;
   border: 3px solid black;
 }
 
+header .topnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 header h1 {
   margin: 0;
-  text-align: center;
   color: black;
 }
 
@@ -56,7 +57,6 @@ footer {
   padding: 10px;
   text-align: center;
   margin-top: auto;
-  /* This pushes the footer to the bottom */
 }
 
 #home {
@@ -72,7 +72,10 @@ footer {
 
 #add {
   color: black;
+  text-decoration: none;
+}
 
-  /*centered*/
+#add:hover {
+  text-decoration: underline;
 }
 </style>
