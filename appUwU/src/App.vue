@@ -2,7 +2,7 @@
   <div id="app">
     <header>
       <div class="topnav">
-        <router-link to="/"><img id="home"src="./assets/home.png"></router-link>
+        <router-link to="/"><img id="home" src="./assets/home.png"></router-link>
         <router-link to="/add-bet" id="add">Admin</router-link>
         <h1>UwU Bets</h1>
       </div>
@@ -29,14 +29,15 @@ export default {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* This ensures that #app takes up at least the full height of the viewport */
+  min-height: 100vh;
+  /* This ensures that #app takes up at least the full height of the viewport */
 }
 
 header {
   background-color: #fff;
   color: #fff;
   padding: 5px;
-border: 3px solid black;
+  border: 3px solid black;
 }
 
 header h1 {
@@ -54,21 +55,24 @@ footer {
   color: #fff;
   padding: 10px;
   text-align: center;
-  margin-top: auto; /* This pushes the footer to the bottom */
+  margin-top: auto;
+  /* This pushes the footer to the bottom */
 }
-#home{
+
+#home {
   width: 45px;
   height: 40px;
   border: 0px solid black;
   border-radius: 20px;
 }
-#home:hover{
+
+#home:hover {
   background-color: gray;
 }
-#add{
-  color: black;
-  
-  /*centered*/  
-}
 
+#add {
+  color: black;
+
+  /*centered*/
+}
 </style>

@@ -6,7 +6,7 @@
       <input type="text" id="title" v-model="title" required>
       <label for="quota">Quota:</label>
       <input type="number" id="quota" v-model="quota" required placeholder="UwU">
-      <button type="submit" id="invia" >{{ betId ? 'Aggiorna' : 'Invia' }}</button>
+      <button type="submit" id="invia">{{ betId ? 'Aggiorna' : 'Invia' }}</button>
       <button type="button" id="annulla" v-if="betId" @click="cancelEdit">Annulla</button> <!-- Add a Cancel button -->
       <button type="button" id="elimina" v-if="betId" @click="deleteBet">Elimina</button> <!-- Add a Delete button -->
     </form>
@@ -14,8 +14,8 @@
       <h3>Scommesse recenti</h3>
       <ul>
         <li v-for="bet in bets" :key="bet.id">
-          {{ bet.title }} Q: {{bet.quota}} scommettitori {{bet.users}}
-          <button class="edit"@click="editBet(bet)">Modifica</button>
+          {{ bet.title }} Q: {{ bet.quota }} scommettitori {{ bet.users }}
+          <button class="edit" @click="editBet(bet)">Modifica</button>
         </li>
       </ul>
     </div>
@@ -99,7 +99,7 @@ export default {
   }
 };
 </script>
-  
+
 <style scoped>
 .topnav {
   background-color: black;
@@ -112,43 +112,49 @@ form {
   margin-bottom: 2rem;
 }
 
-input, button {
+input,
+button {
   padding: 0.5rem;
 }
 
 button {
   cursor: pointer;
 }
-.edit:hover{
+
+.edit:hover {
   background-color: gray;
   color: white;
   border-radius: 5px;
 }
 
-#annulla{
+#annulla {
   border: 4px solid blue;
   background-color: lightblue;
 }
-#annulla:hover{
+
+#annulla:hover {
   background-color: blue;
   color: white;
   border-radius: 5px;
 }
 
-#elimina{
+#elimina {
   border: 4px solid red;
   background-color: lightcoral;
 }
-#elimina:hover{
+
+#elimina:hover {
   background-color: red;
   color: white;
   border-radius: 5px;
 }
-#invia{
+
+#invia {
   border: 4px solid green;
   background-color: lightgreen;
 }
-#invia:hover{
+
+#invia:hover {
   background-color: green;
   color: white;
   border-radius: 5px;
@@ -162,5 +168,4 @@ ul {
 li {
   margin-bottom: 1rem;
 }
-  </style>
-  
+</style>

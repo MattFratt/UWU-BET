@@ -4,7 +4,7 @@
     <input type="email" v-model="email" placeholder="Email">
     <input type="password" v-model="password" placeholder="Password">
     <button @click="register">Registrati</button>
-    <h1> {{errorMessage}}</h1>
+    <h1> {{ errorMessage }}</h1>
   </div>
 </template>
 

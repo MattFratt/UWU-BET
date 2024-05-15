@@ -38,7 +38,7 @@
 <script>
 import { ref } from 'vue';
 import { db } from '../firebase/firebaseConfig.js';
-import { collection, getDocs, doc, updateDoc,getDoc} from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { auth } from '../firebase/firebaseConfig.js';
 import { loadUsers } from '../services/userService';
 
@@ -58,7 +58,7 @@ export default {
     // Carica gli utenti
     this.loadUsers();
     this.loadCurrentUserEmail();
-    
+
     // Carica le scommesse dal database Firestore
     try {
       const querySnapshot = await getDocs(collection(db, 'scommesse'));
@@ -73,7 +73,7 @@ export default {
     this.loadUserMoney();
   },
   methods: {
-    
+
     async loadUsers() {
       try {
         this.users = await loadUsers();
@@ -82,93 +82,36 @@ export default {
       }
     },
     async loadUserMoney() {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.email)); // Utilizza l'email come ID
-        if (userDoc.exists()) {
-          this.money = userDoc.data().money;
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const userDoc = await getDoc(doc(db, 'users', user.email)); // Utilizza l'email come ID
+          if (userDoc.exists()) {
+            this.money = userDoc.data().money;
+          } else {
+            console.error('Documento utente non trovato nel database');
+          }
         } else {
-          console.error('Documento utente non trovato nel database');
+          console.error('Utente non autenticato');
         }
-      } else {
-        console.error('Utente non autenticato');
-      }
-    } catch (error) {
-      console.error('Errore nel caricare il denaro dell\'utente:', error);
-    }
-  },
-  async placeBet(bet) {
-  const betAmount = parseInt(prompt('Quanto vuoi scommettere?', '0'));
-  if (isNaN(betAmount) || betAmount <= 0) {
-    alert('Per favore inserisci un importo valido!');
-    return;
-  }
-  
-  const user = auth.currentUser;
-  if (!user) {
-    console.error('Utente non autenticato');
-    return;
-  }
-  
-  // Verifica se l'utente ha abbastanza denaro per la scommessa
-  const userDoc = await getDoc(doc(db, 'users', user.email));
-  const currentMoney = userDoc.data().money;
-  if (betAmount > currentMoney) {
-    alert('Non hai abbastanza denaro per questa scommessa!');
-    return;
-  }
-  
-  // Sottrai il valore della scommessa dal saldo dell'utente nel database
-  const newMoney = currentMoney - betAmount;
-  try {
-    await updateDoc(doc(db, 'users', user.email), { money: newMoney });
-  } catch (error) {
-    console.error('Errore nell\'aggiornare il denaro dell\'utente:', error);
-    return;
-  }
-
-  // Aggiorna le informazioni della scommessa nel database Firestore
-  try {
-    const betRef = doc(db, 'scommesse', bet.id); // Ottieni il riferimento al documento della scommessa
-    const betDoc = await getDoc(betRef);
-    const betData = betDoc.data();
-    const users = betData.users || {};
-    
-    // Verifica se l'utente è già presente nella lista dei partecipanti
-    if (users[user.email]) {
-      users[user.email] += betAmount; // Aggiungi l'importo della scommessa al denaro già scommesso dall'utente
-    } else {
-      users[user.email] = betAmount; // Aggiungi l'utente alla lista dei partecipanti con l'importo della scommessa
-    }
-    
-    await updateDoc(betRef, { users });
-    alert('Scommessa effettuata con successo!');
-  } catch (error) {
-    console.error('Errore nell\'aggiornare le informazioni della scommessa:', error);
-  }
-}
-
-,
-    async loadCurrentUserEmail() {
-      const user = auth.currentUser;
-      if (user) {
-        this.currentUserEmail = user.email;
+      } catch (error) {
+        console.error('Errore nel caricare il denaro dell\'utente:', error);
       }
     },
+
     async placeBet(bet) {
       const betAmount = parseInt(prompt('Quanto vuoi scommettere?', '0'));
       if (isNaN(betAmount) || betAmount <= 0) {
         alert('Per favore inserisci un importo valido!');
         return;
       }
-      
+
       const user = auth.currentUser;
       if (!user) {
         console.error('Utente non autenticato');
         return;
       }
-      
+
       // Verifica se l'utente ha abbastanza denaro per la scommessa
       const userDoc = await getDoc(doc(db, 'users', user.email));
       const currentMoney = userDoc.data().money;
@@ -176,7 +119,7 @@ export default {
         alert('Non hai abbastanza denaro per questa scommessa!');
         return;
       }
-      
+
       // Sottrai il valore della scommessa dal saldo dell'utente nel database
       const newMoney = currentMoney - betAmount;
       try {
@@ -189,7 +132,83 @@ export default {
       // Aggiorna le informazioni della scommessa nel database Firestore
       try {
         const betRef = doc(db, 'scommesse', bet.id);
-        await updateDoc(betRef, { users: { [user.email]: betAmount } });
+        const betDoc = await getDoc(betRef);
+        const betData = betDoc.data();
+        console.log(betData + " suca " + betData.users);
+
+        // Aggiungi l'utente alla mappa degli utenti della scommessa
+        const usersMap = betData.users || {};
+        if (usersMap[user.email]) {
+          usersMap[user.email] += betAmount; // Se l'utente ha già scommesso, aggiorna l'importo
+        } else {
+          usersMap[user.email] = betAmount; // Se l'utente non ha ancora scommesso, crea un nuovo record
+        }
+
+        // Aggiorna il numero totale di scommettitori
+        const totalBetters = Object.keys(usersMap).length;
+
+        // Aggiorna le informazioni della scommessa nel database
+        await updateDoc(betRef, { users: usersMap, totalBetters });
+        alert('Scommessa effettuata con successo!');
+      } catch (error) {
+        console.error('Errore nell\'aggiornare le informazioni della scommessa:', error);
+      }
+    }
+
+
+    ,
+    async loadCurrentUserEmail() {
+      const user = auth.currentUser;
+      if (user) {
+        this.currentUserEmail = user.email;
+      }
+    },
+    async placeBet(bet) {
+      const betAmount = parseInt(prompt('Quanto vuoi scommettere?', '0'));
+      if (isNaN(betAmount) || betAmount <= 0) {
+        alert('Per favore inserisci un importo valido!');
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        console.error('Utente non autenticato');
+        return;
+      }
+
+      // Verifica se l'utente ha abbastanza denaro per la scommessa
+      const userDoc = await getDoc(doc(db, 'users', user.email));
+      const currentMoney = userDoc.data().money;
+      if (betAmount > currentMoney) {
+        alert('Non hai abbastanza denaro per questa scommessa!');
+        return;
+      }
+
+      // Sottrai il valore della scommessa dal saldo dell'utente nel database
+      const newMoney = currentMoney - betAmount;
+      try {
+        await updateDoc(doc(db, 'users', user.email), { money: newMoney });
+      } catch (error) {
+        console.error('Errore nell\'aggiornare il denaro dell\'utente:', error);
+        return;
+      }
+
+      // Aggiorna le informazioni della scommessa nel database Firestore
+      try {
+        const betRef = doc(db, 'scommesse', bet.id);
+        const betDoc = await getDoc(betRef);
+        const betData = betDoc.data();
+        const users = betData.users || {};
+
+        // If the user has already placed a bet, add the new bet amount to the existing one
+        // Otherwise, add the user to the users object with the bet amount
+        if (users[user.email]) {
+          users[user.email] += betAmount;
+        } else {
+          users[user.email] = betAmount;
+        }
+
+        await updateDoc(betRef, { users });
         alert('Scommessa effettuata con successo!');
       } catch (error) {
         console.error('Errore nell\'aggiornare le informazioni della scommessa:', error);
