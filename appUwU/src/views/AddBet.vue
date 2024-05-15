@@ -14,7 +14,13 @@
           <input class="input" type="number" id="quota" v-model="quota" required placeholder="UwU"> <!--QUOTA-->
         </div>
       </div>
-     
+      <div class="field">
+        <label class="label" for="scadenza">Scadenza:</label>
+        <div class="control">
+          <input class="input" type="datetime-local" id="scadenza" v-model="expiryDate">
+          <!--SCADENZA-->
+        </div>
+      </div>
       <div class="field is-grouped">
         <div class="control">
           <button class="button is-link" :class="{ 'is-loading': isLoading }" type="submit" id="invia">{{ betId ?
@@ -35,7 +41,8 @@
       <h3 class="title is-4">Scommesse recenti</h3>
       <ul>
         <li v-for="bet in bets" :key="bet.id" class="box">
-          {{ bet.title }} Q: {{ bet.quota }} scommettitori {{ bet.users }}
+          {{ bet.title }} | Q: {{ bet.quota }} | scommettitori {{ bet.users }} | scadenza: {{
+            dateFormatted(bet.expiryDate) }}
           <button class="button is-small is-info" @click="editBet(bet)">Modifica</button>
         </li>
       </ul>
@@ -47,6 +54,8 @@
 import { ref, onMounted } from 'vue';
 import { db } from '../firebase/firebaseConfig.js';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import moment from 'moment';
+
 
 export default {
   name: 'AddBet',
@@ -54,6 +63,7 @@ export default {
     return {
       title: '',
       quota: 1,
+      expiryDate: '',
       bets: [],
       betId: null,
       isLoading: false,
@@ -66,28 +76,31 @@ export default {
       try {
         const betData = {
           title: this.title,
-          quota: this.quota
+          quota: this.quota,
+          expiryDate: this.expiryDate || moment().add(1, 'days').hour(8).minute(0).second(0).format()
         };
         await addDoc(collection(db, 'scommesse'), betData);
         this.title = '';
         this.quota = 1;
+        this.expiryDate = '';
         await this.loadBets(); // Load the bets after adding a new one
       } catch (error) {
         console.error('Error adding bet:', error);
       }
       this.isLoading = false;
-
     },
     async updateBet() {
       this.isLoading = true;
       const betRef = doc(db, 'scommesse', this.betId);
       const betData = {
         title: this.title,
-        quota: this.quota
+        quota: this.quota,
+        expiryDate: this.expiryDate || moment().add(1, 'days').hour(8).minute(0).second(0).format()
       };
       await updateDoc(betRef, betData);
       this.title = '';
       this.quota = 1;
+      this.expiryDate = '';
       this.betId = null;
       await this.loadBets(); // Reload the bets after updating one
       this.isLoading = false;
@@ -95,6 +108,7 @@ export default {
     cancelEdit() {
       this.title = '';
       this.quota = 1;
+      this.expiryDate = '';
       this.betId = null;
     },
     async deleteBet() {
@@ -108,21 +122,28 @@ export default {
       await this.loadBets(); // Reload the bets after deleting one
       this.deleteLoading = false;
     },
-    editBet(bet) {
-      this.title = bet.title;
-      this.quota = bet.quota;
-      this.betId = bet.id; // Set the ID of the bet to be edited
-    },
     async loadBets() {
       try {
         const querySnapshot = await getDocs(collection(db, 'scommesse'));
         this.bets = []; // Clear the bets array before loading new bets
         querySnapshot.forEach((doc) => {
-          this.bets.push({ id: doc.id, ...doc.data() });
+          const bet = { id: doc.id, ...doc.data() };
+          bet.isExpired = moment().isAfter(moment(bet.expiryDate));  // Add the isExpired property
+          this.bets.push(bet);
         });
       } catch (error) {
         console.error('Error loading bets:', error);
       }
+    },
+    editBet(bet) {
+
+      this.title = bet.title;
+      this.quota = bet.quota;
+      this.expiryDate = bet.expiryDate;
+      this.betId = bet.id; // Set the ID of the bet to be edited
+    },
+    dateFormatted(date) {
+      return moment(date).format('DD/MM/YYYY HH:mm');
     }
   },
   async mounted() {

@@ -41,8 +41,9 @@
       <ul>
         <li v-for="bet in bets" :key="bet.id">
           <div class="scommessa"> {{ bet.title }} | Quota: {{ bet.quota }}</div>
-          aggiungere timer scadenza scommessa
-          <button class="button is-danger" @click="placeBet(bet)">Scommetti subito!</button>
+          <div>Scadenza: {{ getRemainingTime(bet.expiryDate) }}</div>
+          <button class="button is-danger" @click="placeBet(bet)" v-bind:disabled="isExpired(bet)">Scommetti
+            subito!</button>
         </li>
       </ul>
     </div>
@@ -60,7 +61,7 @@ import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore'
 import { auth } from '../firebase/firebaseConfig.js';
 import { loadUsers } from '../services/userService';
 import { onAuthStateChanged } from 'firebase/auth';
-
+import moment from 'moment';
 
 
 
@@ -73,13 +74,15 @@ export default {
       isLoggedIn: false,
       users: [],
       bets: [],
-      money: 0
+      money: 0,
+      timers: []
     };
   },
   async mounted() {
     // Carica gli utenti
     this.loadUsers();
     this.loadCurrentUserEmail();
+
 
     // Carica le scommesse dal database Firestore
     try {
@@ -101,6 +104,11 @@ export default {
     });
     // Carica il saldo dell'utente corrente
     this.loadUserMoney();
+    this.startTimers();
+  },
+  beforeDestroy() {
+    // Assicurati di cancellare i timer quando il componente viene distrutto
+    this.timers.forEach(clearInterval);
   },
   methods: {
     async loadUsers() {
@@ -126,63 +134,8 @@ export default {
       } catch (error) {
         console.error('Errore nel caricare il denaro dell\'utente:', error);
       }
-    },
-
-    async placeBet(bet) {
-      const betAmount = parseInt(prompt('Quanto vuoi scommettere?', '0'));
-      if (isNaN(betAmount) || betAmount <= 0) {
-        alert('Per favore inserisci un importo valido!');
-        return;
-      }
-
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('Utente non autenticato');
-        return;
-      }
-
-      // Verifica se l'utente ha abbastanza denaro per la scommessa
-      const userDoc = await getDoc(doc(db, 'users', user.email));
-      const currentMoney = userDoc.data().money;
-      if (betAmount > currentMoney) {
-        alert('Non hai abbastanza denaro per questa scommessa!');
-        return;
-      }
-
-      // Sottrai il valore della scommessa dal saldo dell'utente nel database
-      const newMoney = currentMoney - betAmount;
-      try {
-        await updateDoc(doc(db, 'users', user.email), { money: newMoney });
-      } catch (error) {
-        console.error('Errore nell\'aggiornare il denaro dell\'utente:', error);
-        return;
-      }
-
-      // Aggiorna le informazioni della scommessa nel database Firestore
-      try {
-        const betRef = doc(db, 'scommesse', bet.id);
-        const betDoc = await getDoc(betRef);
-        const betData = betDoc.data();
-        console.log(betData + " suca " + betData.users);
-
-        // Aggiungi l'utente alla mappa degli utenti della scommessa
-        const usersMap = betData.users || {};
-        if (usersMap[user.email]) {
-          usersMap[user.email] += betAmount; // Se l'utente ha già scommesso, aggiorna l'importo
-        } else {
-          usersMap[user.email] = betAmount; // Se l'utente non ha ancora scommesso, crea un nuovo record
-        }
-
-        // Aggiorna il numero totale di scommettitori
-        const totalBetters = Object.keys(usersMap).length;
-
-        // Aggiorna le informazioni della scommessa nel database
-        await updateDoc(betRef, { users: usersMap, totalBetters });
-        alert('Scommessa effettuata con successo!');
-      } catch (error) {
-        console.error('Errore nell\'aggiornare le informazioni della scommessa:', error);
-      }
     }
+
 
 
     ,
@@ -192,7 +145,25 @@ export default {
         this.currentUserEmail = user.email;
       }
     },
+
     async placeBet(bet) {
+
+      //verifica se l'utente è autenticato
+      if (!auth.currentUser) {
+        alert('Per favore effettua il login per scommettere!');
+        console.error('Utente non autenticato');
+        return;
+      }
+
+      //verifica se la scommessa è scaduta
+
+      if (this.isExpired(bet)) {
+        alert('La scommessa è scaduta!');
+        return;
+      }
+
+
+
       const betAmount = parseInt(prompt('Quanto vuoi scommettere?', '0'));
       if (isNaN(betAmount) || betAmount <= 0) {
         alert('Per favore inserisci un importo valido!');
@@ -242,6 +213,24 @@ export default {
       } catch (error) {
         console.error('Errore nell\'aggiornare le informazioni della scommessa:', error);
       }
+    }, startTimers() {
+      this.bets.forEach((bet) => {
+        const timer = setInterval(() => {
+          bet.remainingTime = this.getRemainingTime(bet.expiryDate);
+        }, 1000);
+        this.timers.push(timer);
+      });
+    },
+    getRemainingTime(expiryDate) {
+      const now = moment();
+      const expiry = moment(expiryDate);
+      const duration = moment.duration(expiry.diff(now));
+      return `${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
+    },
+    isExpired(bet) {
+      const now = moment();
+      const expiry = moment(bet.expiryDate);
+      return now.isAfter(expiry);
     }
   }
 };

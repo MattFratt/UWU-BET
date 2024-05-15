@@ -144,6 +144,10 @@ export default {
 #add:hover {
   text-decoration: underline;
 }
-
+@media (max-width: 1023px) {
+  .navbar-menu {
+    display: flex;
+  }
+}
 
 </style>
