@@ -20,7 +20,7 @@
       </div>
       <div class="field">
         <p class="control">
-          <button class="button is-success" @click="register">Registrati</button>
+          <button class="button is-success" :class="{ 'is-loading': isLoading }" @click="register">Registrati</button>
         </p>
       </div>
       <h1 class="title is-4 has-text-danger"> {{ errorMessage }}</h1>
@@ -34,6 +34,8 @@ import { auth } from '../firebase/firebaseConfig.js';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
+import router from '../router/index.js'; // Assicurati di aver configurato correttamente il router
+
 
 
 export default {
@@ -41,14 +43,17 @@ export default {
     return {
       email: '',
       password: '',
-      errorMessage: " "
+      errorMessage: " ",
+      isLoading: false
     };
   },
   methods: {
     async register() {
+      this.isLoading = true;
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
         const user = userCredential.user;
+
 
         // Aggiungi l'utente al database con l'email come ID
         await setDoc(doc(db, 'users', user.email), {
@@ -56,8 +61,7 @@ export default {
           money: 5 // Assegna 5 monete all'utente appena registrato
         });
 
-        // Reindirizza l'utente a una pagina di successo o alla home
-        router.push('/');
+
       } catch (error) {
         console.error('Errore durante la registrazione:', error);
         // Gestione degli errori durante la registrazione
@@ -66,6 +70,9 @@ export default {
           console.log('Email già in uso');
         }
       }
+      this.isLoading = false;
+      // Reindirizza l'utente a una pagina di successo o alla home
+      router.push('/');
     },
     async assignCoins(userId) {
       try {

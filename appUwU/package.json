@@ -11,8 +11,10 @@
   "dependencies": {
     "bulma": "^1.0.0",
     "firebase": "^10.11.1",
+    "sweetalert": "^2.1.2",
     "vue": "^3.4.27",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vue-sweetalert2": "^5.0.10"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
