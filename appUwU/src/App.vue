@@ -2,7 +2,7 @@
   <div id="app" class="has-navbar-fixed-top">
     <header class="navbar">
       <div class="navbar-brand">
-        <router-link to="/" class="navbar-item"><span class="icon-text">
+        <router-link to="/" class="navbar-item" id="home"><span class="icon-text">
           <span class="icon">
             <i class="fas fa-home"></i>
           </span>
@@ -13,7 +13,7 @@
       </div>
       <div class="navbar-menu" id="navbarMatta" >
         <div class="navbar-end">
-          <div class="dropdown" :class="{ 'is-active': dropdownIsActive }">
+          <div class="dropdown navbar-item has-dropdown is-hoverable" >
             <div class="dropdown-trigger">
               <button id="accountBottone" class="button" @click="dropdownIsActive = !dropdownIsActive" aria-haspopup="true"
                 aria-controls="dropdown-menu"> <span>Account</span>
@@ -110,17 +110,7 @@ export default {
   flex-direction: column;
   min-height: 100vh;
 }
-
-#home {
-  width: 45px;
-  height: 40px;
-  border: 0px solid black;
-  border-radius: 20px;
-}
-
-#home:hover {
-  background-color: gray;
-}
+  
 
 #add {
   color: black;
