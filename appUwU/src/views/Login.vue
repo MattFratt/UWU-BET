@@ -38,7 +38,7 @@ import { ref } from 'vue';
 import { auth, db } from '../firebase/firebaseConfig.js';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import router from '../router/index.js'; // Assicurati di aver configurato correttamente il router
+import router from '../router/index.js'; 
 
 export default {
   data() {

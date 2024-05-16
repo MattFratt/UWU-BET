@@ -4,16 +4,9 @@
     <p class="title">Benvenuto nel miglior sito di scommesse doliche</p> <br>
     <p class="subtitle" v-if="!isLoggedIn">Accedi o registrati per iniziare a scommettere!</p>
 
-    <!--
-    <router-link v-if="!isLoggedIn" class="button is-primary" to="/login">Login</router-link>
-    <router-link v-if="!isLoggedIn" class="button is-link" to="/register">Registrati</router-link>  AGGIUNTO ALLA NAVBAR
-
-
-    <button v-if="isLoggedIn" class="button is-danger" @click="logout">Logout </button>
-    -->
     <h1 v-if="isLoggedIn" class="title" id="accountAccesso">Bentornato <div class="emailMain">{{ currentUserEmail }}
       </div> ! </h1>
-    <!-- Visualizza la lista degli utenti -->
+    <!-- Visualizza la lista degli utenti 
     <div class="dropdown" :class="{ 'is-active': showUsers }">
       <div class="dropdown-trigger">
         <button class="button" @click="showUsers = !showUsers">
@@ -31,7 +24,7 @@
         </div>
       </div>
     </div>
-
+                    -->
     <!-- Visualizza il saldo dell'utente -->
     <p class="tag is-info">UwU disponibili: {{ money }}</p>
 
@@ -55,15 +48,12 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, reactive, toRefs } from 'vue';
 import { db } from '../firebase/firebaseConfig.js';
 import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { auth } from '../firebase/firebaseConfig.js';
 import { loadUsers } from '../services/userService';
 import { onAuthStateChanged } from 'firebase/auth';
-import moment from 'moment';
-
-
 
 export default {
   name: 'Home',
@@ -73,18 +63,15 @@ export default {
       showUsers: false,
       isLoggedIn: false,
       users: [],
-      bets: [],
+      bets: reactive([]),
       money: 0,
       timers: []
     };
   },
   async mounted() {
-    // Carica gli utenti
     this.loadUsers();
     this.loadCurrentUserEmail();
 
-
-    // Carica le scommesse dal database Firestore
     try {
       const querySnapshot = await getDocs(collection(db, 'scommesse'));
       querySnapshot.forEach((doc) => {
@@ -93,6 +80,7 @@ export default {
     } catch (error) {
       console.error('Errore nel caricare le scommesse:', error);
     }
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.currentUserEmail = user.email;
@@ -102,13 +90,18 @@ export default {
         this.isLoggedIn = false;
       }
     });
-    // Carica il saldo dell'utente corrente
+
     this.loadUserMoney();
-    this.startTimers();
-  },
-  beforeDestroy() {
-    // Assicurati di cancellare i timer quando il componente viene distrutto
-    this.timers.forEach(clearInterval);
+
+    this.$nextTick(() => {
+      this.startTimers();
+    });
+
+    setInterval(() => {
+      this.updateTimers();
+    }, 1000); // Ogni secondo
+
+
   },
   methods: {
     async loadUsers() {
@@ -122,7 +115,7 @@ export default {
       try {
         const user = auth.currentUser;
         if (user) {
-          const userDoc = await getDoc(doc(db, 'users', user.email)); // Utilizza l'email come ID
+          const userDoc = await getDoc(doc(db, 'users', user.email));
           if (userDoc.exists()) {
             this.money = userDoc.data().money;
           } else {
@@ -134,35 +127,24 @@ export default {
       } catch (error) {
         console.error('Errore nel caricare il denaro dell\'utente:', error);
       }
-    }
-
-
-
-    ,
+    },
     async loadCurrentUserEmail() {
       const user = auth.currentUser;
       if (user) {
         this.currentUserEmail = user.email;
       }
     },
-
     async placeBet(bet) {
-
-      //verifica se l'utente è autenticato
       if (!auth.currentUser) {
         alert('Per favore effettua il login per scommettere!');
         console.error('Utente non autenticato');
         return;
       }
 
-      //verifica se la scommessa è scaduta
-
       if (this.isExpired(bet)) {
         alert('La scommessa è scaduta!');
         return;
       }
-
-
 
       const betAmount = parseInt(prompt('Quanto vuoi scommettere?', '0'));
       if (isNaN(betAmount) || betAmount <= 0) {
@@ -176,7 +158,6 @@ export default {
         return;
       }
 
-      // Verifica se l'utente ha abbastanza denaro per la scommessa
       const userDoc = await getDoc(doc(db, 'users', user.email));
       const currentMoney = userDoc.data().money;
       if (betAmount > currentMoney) {
@@ -184,7 +165,6 @@ export default {
         return;
       }
 
-      // Sottrai il valore della scommessa dal saldo dell'utente nel database
       const newMoney = currentMoney - betAmount;
       try {
         await updateDoc(doc(db, 'users', user.email), { money: newMoney });
@@ -193,15 +173,12 @@ export default {
         return;
       }
 
-      // Aggiorna le informazioni della scommessa nel database Firestore
       try {
         const betRef = doc(db, 'scommesse', bet.id);
         const betDoc = await getDoc(betRef);
         const betData = betDoc.data();
         const users = betData.users || {};
 
-        // If the user has already placed a bet, add the new bet amount to the existing one
-        // Otherwise, add the user to the users object with the bet amount
         if (users[user.email]) {
           users[user.email] += betAmount;
         } else {
@@ -209,28 +186,55 @@ export default {
         }
 
         await updateDoc(betRef, { users });
+        this.loadUserMoney();
         alert('Scommessa effettuata con successo!');
       } catch (error) {
         console.error('Errore nell\'aggiornare le informazioni della scommessa:', error);
       }
-    }, startTimers() {
-      this.bets.forEach((bet) => {
+    },
+    startTimers() {
+      this.bets.forEach((bet, index) => {
         const timer = setInterval(() => {
-          bet.remainingTime = this.getRemainingTime(bet.expiryDate);
-        }, 1000);
+          this.updateTimer(bet, index);
+        }, 1000); // Every second
         this.timers.push(timer);
       });
     },
-    getRemainingTime(expiryDate) {
-      const now = moment();
-      const expiry = moment(expiryDate);
-      const duration = moment.duration(expiry.diff(now));
-      return `${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
+    updateTimers() {
+      this.bets.forEach((bet, index) => {
+        this.updateTimer(bet, index);
+      });
     },
+    updateTimer(bet, index) {
+      try {
+        const remainingTime = this.getRemainingTime(bet.expiryDate);
+        // Creazione di un nuovo oggetto scommessa con il tempo rimanente aggiornato
+        const updatedBet = { ...bet, remainingTime };
+        // Assegnazione del nuovo oggetto scommessa direttamente all'array
+        this.bets[index] = updatedBet;
+      } catch (error) {
+        console.error('Errore durante l\'aggiornamento del timer:', error);
+      }
+    },
+    getRemainingTime(expiryDate) {
+      const now = new Date();
+      const expiry = new Date(expiryDate);
+      const diffInMilliseconds = expiry - now;
+      const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+      const hours = Math.floor(diffInSeconds / 3600);
+      const minutes = Math.floor((diffInSeconds % 3600) / 60);
+      const seconds = diffInSeconds % 60;
+      return `${hours}h ${minutes}m ${seconds}s`;
+    },
+
     isExpired(bet) {
-      const now = moment();
-      const expiry = moment(bet.expiryDate);
-      return now.isAfter(expiry);
+      const now = new Date();
+      const expiry = new Date(bet.expiryDate);
+      return now >= expiry;
+    },
+    beforeUnmount() {
+      // Pulisce i timer prima che il componente venga smontato per evitare perdite di memoria
+      this.timers.forEach(timer => clearInterval(timer));
     }
   }
 };

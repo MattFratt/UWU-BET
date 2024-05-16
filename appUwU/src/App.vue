@@ -23,11 +23,27 @@
             </div>
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
               <div class="dropdown-content">
-                <router-link v-if="!isAdmin" class="dropdown-item" to="/register" @click="hideDropdown">Registrati</router-link>
-                <router-link v-if="!isAdmin" class="dropdown-item" to="/login" @click="hideDropdown">Login</router-link>
-                <router-link v-if="isAdmin" class="dropdown-item" to="/add-bet" id="admin" @click="hideDropdown">ADMIN</router-link>
+
+                <router-link v-if="!isLoggedIn" class="dropdown-item" to="/register"
+                  @click="hideDropdown">Registrati</router-link>
+
+                <router-link v-if="!isLoggedIn" class="dropdown-item" to="/login"
+                  @click="hideDropdown">Login</router-link>
+
+                <router-link v-if="isAdmin" class="dropdown-item" to="/add-bet" id="admin"
+                  @click="hideDropdown">ADMIN</router-link>
+
+                <router-link v-if="isLoggedIn" class="dropdown-item" to="/account" id="admin" @click="hideDropdown">
+                  <div class="icon-text">
+                    <span class="icon has-text-info">
+                      <i class="fas fa-info-circle"></i>
+                    </span>
+                    <span>info</span>
+                  </div>
+                </router-link>
                 <router-link v-if="isAdmin" class="dropdown-item" to="/users" @click="hideDropdown">Utenti</router-link>
-                <button v-if="isLoggedIn" class="dropdown-item" @click="logout" id="logout" >Logout</button>
+                <button v-if="isLoggedIn" class="dropdown-item" @click="logout" id="logout">Logout</button>
+
               </div>
             </div>
           </div>
@@ -61,7 +77,7 @@ export default {
   directives: {
     clickOutside: {
       beforeMount(el, binding) {
-        el.clickOutsideEvent = function(event) {
+        el.clickOutsideEvent = function (event) {
           if (!(el === event.target || el.contains(event.target))) {
             binding.value(event);
           }
@@ -138,10 +154,6 @@ export default {
 }
 
 
-.dropdown-menu {
-
-  }
-
 .dropdown-content {
   max-width: fit-content;
 
@@ -149,6 +161,13 @@ export default {
 
 .home-button {
   color: white;
+}
+
+.home-button:hover {
+
+  transform: scale(1.3);
+  background-color: rgb(86, 131, 255);
+
 }
 
 .title {
