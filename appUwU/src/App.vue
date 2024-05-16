@@ -1,34 +1,33 @@
 <template>
   <div id="app" class="has-navbar-fixed-top">
     <header class="navbar">
-      <div class="navbar-brand">
-        <router-link to="/" class="navbar-item" id="home"><span class="icon-text">
-          <span class="icon">
-            <i class="fas fa-home"></i>
+      <div class="navbar-content">
+        <router-link to="/" class="home-button">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-home"></i>
+            </span>
+            <span>Home</span>
           </span>
-          <span>Home</span>
-        </span></router-link>
-        <router-link v-if="isAdmin" to="/add-bet" id="add" class="navbar-item">Admin</router-link>
-        <h1 class="title is-4 navbar-item" id="uwuBets" >UwU Bets</h1>
-      </div>
-      <div class="navbar-menu" id="navbarMatta" >
-        <div class="navbar-end">
-          <div class="dropdown navbar-item has-dropdown is-hoverable" >
+        </router-link>
+        <h1 class="title">UwU Bets</h1>
+        <div class="account-settings" style="position: relative;">
+          <div class="dropdown" :class="{ 'is-active': dropdownIsActive }">
             <div class="dropdown-trigger">
-              <button id="accountBottone" class="button" @click="accountHover" aria-haspopup="true"
-                aria-controls="dropdown-menu"> <span>Account</span>
+              <button class="button" @click="accountHover">
+                <span>Account</span>
                 <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
               </button>
             </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu"   >
-              <div class="dropdown-content"  >
-                <router-link v-if="!isLoggedIn" class="navbar-item" to="/login">Login</router-link>
-                <router-link v-if="!isLoggedIn" class="dropdown-item" to="/register">Registrati</router-link>
-                <hr class="dropdown-divider">
-                <router-link v-if="isLoggedIn" class="dropdown-item" to="/account">Account</router-link>
-                <a v-if="isLoggedIn" class="dropdown-item" @click="logout">Logout</a>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <router-link v-if="!isAdmin" class="dropdown-item" to="/register">Registrati</router-link>
+                <router-link v-if="!isAdmin" class="dropdown-item" to="/login">Login</router-link>
+                <router-link v-if="isAdmin" class="dropdown-item" to="/admin" id="admin">ADMIN</router-link>
+                <router-link v-if="isAdmin" class="dropdown-item" to="/users">Utenti</router-link>
+                <button v-if="isLoggedIn" class="dropdown-item" @click="logout" id="logout">Logout</button>
               </div>
             </div>
           </div>
@@ -58,7 +57,6 @@ export default {
       isLoggedIn: false,
       dropdownIsActive: false,
     };
-
   },
   setup() {
     const currentUserEmail = ref(null);
@@ -99,12 +97,8 @@ export default {
         console.error('Error logging out:', error);
       });
     },
-    accountHover(){
-      if(dropdownIsActive){
-        dropdownIsActive= false;
-      }else{
-        dropdownIsActive=true;
-      }
+    accountHover() {
+      this.dropdownIsActive = !this.dropdownIsActive;
     }
   }
 }
@@ -117,61 +111,38 @@ export default {
   flex-direction: column;
   min-height: 100vh;
 }
-  
 
-#add {
-  color: black;
-  text-decoration: none;
-  animation: colorChange 2s infinite;
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 }
 
-@keyframes colorChange {
-  0% {
-    color: rgb(255, 0, 0);
+
+.dropdown-menu {
+
   }
 
-  33% {
-    color: rgb(0, 255, 0);
-  }
+.dropdown-content {
+  max-width: fit-content;
 
-  66% {
-    color: rgb(0, 0, 255);
-  }
-
-  100% {
-    color: rgb(255, 0, 0);
-  }
 }
 
-#add:hover {
-  text-decoration: underline;
-}
-@media (max-width: 1023px) {
-  .navbar-menu {
-    display: block;
-    
-  }
-}
-#accountBottone{
-  position: fixed;
-  right: 2vh;
-  top: 0.6vh;
-}
-#navbarMatta{
-  height: 2vh;
-}
-#uwuBets{
-  top: 1vh;
-  height: 4vh;
-  font-size: 2vh;
+.home-button {
+  color: white;
 }
 
-#dropdown-menu {
-  position: fixed;
-  left: 100; /* Fissa il menu al lato destro della pagina */
-  top: 5vh;
-  width: auto; /* Imposta la larghezza automatica o specifica un valore adeguato */
-  max-width: 300px; /* Puoi aggiungere un massimo di larghezza se necessario */
+.title {
+  color: white;
 }
 
+.account-settings {
+  display: flex;
+  align-items: center;
+}
+
+#logout {
+  color: red;
+}
 </style>
