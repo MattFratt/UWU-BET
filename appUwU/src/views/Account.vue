@@ -34,11 +34,11 @@ export default {
     name: 'Account',
     data() {
         return {
-            recentGames: localStorage.getItem('recentGames') ? JSON.parse(localStorage.getItem('recentGames')) : [],
-            maxWin: localStorage.getItem('maxWin') ? JSON.parse(localStorage.getItem('maxWin')) : '',
-            currentBalance: localStorage.getItem('currentBalance') ? JSON.parse(localStorage.getItem('currentBalance')) : '',
-            highestBalance: localStorage.getItem('highestBalance') ? JSON.parse(localStorage.getItem('highestBalance')) : '',
-            email: auth.currentUser.email
+            recentGames: [],
+            maxWin: '',
+            currentBalance: '',
+            highestBalance: '',
+            email: ''
         }
     },
     methods: {
@@ -50,17 +50,15 @@ export default {
             this.maxWin = userData.maxWin;
             this.currentBalance = userData.money;
             this.highestBalance = userData.highestBalance;
-
-            // Save the data to local storage
-            localStorage.setItem('maxWin', JSON.stringify(this.maxWin));
-            localStorage.setItem('currentBalance', JSON.stringify(this.currentBalance));
-            localStorage.setItem('highestBalance', JSON.stringify(this.highestBalance));
-
-            // Fetch recent games as before
         }
     },
     created() {
-        this.fetchData();
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.email = user.email;
+                this.fetchData();
+            }
+        });
     }
 }
 </script>
