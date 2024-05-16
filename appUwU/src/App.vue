@@ -2,7 +2,12 @@
   <div id="app" class="has-navbar-fixed-top">
     <header class="navbar">
       <div class="navbar-brand">
-        <router-link to="/" class="navbar-item"><img id="home" src="./assets/home.png"></router-link>
+        <router-link to="/" class="navbar-item"><span class="icon-text">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+          <span>Home</span>
+        </span></router-link>
         <router-link v-if="isAdmin" to="/add-bet" id="add" class="navbar-item">Admin</router-link>
         <h1 class="title is-4 navbar-item" id="uwuBets" >UwU Bets</h1>
       </div>
