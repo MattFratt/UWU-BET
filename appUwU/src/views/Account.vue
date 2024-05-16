@@ -34,10 +34,10 @@ export default {
     name: 'Account',
     data() {
         return {
-            recentGames: JSON.parse(localStorage.getItem('recentGames')) || [],
-            maxWin: JSON.parse(localStorage.getItem('maxWin')) || '',
-            currentBalance: JSON.parse(localStorage.getItem('currentBalance')) || '',
-            highestBalance: JSON.parse(localStorage.getItem('highestBalance')) || '',
+            recentGames: localStorage.getItem('recentGames') ? JSON.parse(localStorage.getItem('recentGames')) : [],
+            maxWin: localStorage.getItem('maxWin') ? JSON.parse(localStorage.getItem('maxWin')) : '',
+            currentBalance: localStorage.getItem('currentBalance') ? JSON.parse(localStorage.getItem('currentBalance')) : '',
+            highestBalance: localStorage.getItem('highestBalance') ? JSON.parse(localStorage.getItem('highestBalance')) : '',
             email: auth.currentUser.email
         }
     },
