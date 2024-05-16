@@ -34,8 +34,17 @@ textarea {
 }
 
 /* Global styles */
+@media (max-width: 600px) {
+  :root {
+    font-size: 1.3vh; /* Riduci la dimensione base del font per schermi piccoli */
+  }
+}
 
-
+@media (min-width: 1200px) {
+  :root {
+    font-size: 1.9vh; /* Aumenta la dimensione base del font per schermi grandi */
+  }
+}
 
 body {
   font-family: Arial, sans-serif;
@@ -64,15 +73,21 @@ button {
 }
 
 /* Add your custom global styles here */
+@media screen and (min-width: 1024px) {
+      .container {
+          max-width: 660px;
+      }
+  }
+
 .title {
   display: inline-block;
   padding-top: 0.5em;
-  font-size: small;
+  font-size: 3vh;
   background-color: rgb(51, 51, 51, 0.5);
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-bottom: 0.5em;
-  border-radius: 4em;
+  padding-left: 1vh;
+  padding-right: 1vh;
+  padding-bottom: 1vh;
+  border-radius: 8vh;
 }
 
 footer {
@@ -96,4 +111,5 @@ footer {
   color: aliceblue;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
+  
 }

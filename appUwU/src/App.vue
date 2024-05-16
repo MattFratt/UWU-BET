@@ -4,20 +4,20 @@
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item"><img id="home" src="./assets/home.png"></router-link>
         <router-link v-if="isAdmin" to="/add-bet" id="add" class="navbar-item">Admin</router-link>
-        <h1 class="title is-4 navbar-item">UwU Bets</h1>
+        <h1 class="title is-4 navbar-item" id="uwuBets" >UwU Bets</h1>
       </div>
-      <div class="navbar-menu">
+      <div class="navbar-menu" id="navbarMatta" >
         <div class="navbar-end">
           <div class="dropdown" :class="{ 'is-active': dropdownIsActive }">
             <div class="dropdown-trigger">
-              <button class="button" @click="dropdownIsActive = !dropdownIsActive" aria-haspopup="true"
+              <button id="accountBottone" class="button" @click="dropdownIsActive = !dropdownIsActive" aria-haspopup="true"
                 aria-controls="dropdown-menu"> <span>Account</span>
                 <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
               </button>
             </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-menu" id="dropdown-menu" role="menu" >
               <div class="dropdown-content">
                 <router-link v-if="!isLoggedIn" class="dropdown-item" to="/login">Login</router-link>
                 <router-link v-if="!isLoggedIn" class="dropdown-item" to="/register">Registrati</router-link>
@@ -146,8 +146,30 @@ export default {
 }
 @media (max-width: 1023px) {
   .navbar-menu {
-    display: flex;
+    display: block;
+    
   }
+}
+#accountBottone{
+  position: fixed;
+  right: 2vh;
+  top: 0.6vh;
+}
+#navbarMatta{
+  height: 2vh;
+}
+#uwuBets{
+  top: 1vh;
+  height: 4vh;
+  font-size: 2vh;
+}
+
+#dropdown-menu {
+  position: fixed;
+  left: 100; /* Fissa il menu al lato destro della pagina */
+  top: 5vh;
+  width: auto; /* Imposta la larghezza automatica o specifica un valore adeguato */
+  max-width: 300px; /* Puoi aggiungere un massimo di larghezza se necessario */
 }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
-
+  
   <div class="container">
-    <p class="title">Benvenuti nel miglior sito di scommesse doliche</p>
+    <p class="title">Benvenuto nel miglior sito di scommesse doliche</p>
     <p class="subtitle" v-if="!isLoggedIn">Accedi o registrati per iniziare a scommettere!</p>
 
     <!--
