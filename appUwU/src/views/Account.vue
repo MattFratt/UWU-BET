@@ -1,6 +1,6 @@
 <template>
     <section class="section">
-        <div class="container">
+        <div class="container" @keydown.enter="login">
             <h1 class="title">* Indirizzo mail *</h1>
             <div class="boxerellino">
                 <div class="container">
@@ -26,7 +26,7 @@ export default {
     name: 'Account',
     data() {
         return {
-           
+
         }
     },
     methods: {

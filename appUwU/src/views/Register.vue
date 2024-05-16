@@ -12,7 +12,7 @@
       </div>
       <div class="field">
         <p class="control has-icons-left">
-          <input class="input" type="password" v-model="password" placeholder="Password">
+          <input class="input" type="password" v-model="password" @keydown.enter="login" placeholder="Password">
           <span class="icon is-small is-left">
             <i class="fas fa-lock"></i>
           </span>

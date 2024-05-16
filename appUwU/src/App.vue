@@ -11,7 +11,7 @@
           </span>
         </router-link>
         <h1 class="title">UwU Bets</h1>
-        <div class="account-settings" style="position: relative;">
+        <div v-click-outside="hideDropdown" class="account-settings" style="position: relative;">
           <div class="dropdown" :class="{ 'is-active': dropdownIsActive }">
             <div class="dropdown-trigger">
               <button class="button" @click="accountHover">
@@ -23,11 +23,11 @@
             </div>
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
               <div class="dropdown-content">
-                <router-link v-if="!isAdmin" class="dropdown-item" to="/register">Registrati</router-link>
-                <router-link v-if="!isAdmin" class="dropdown-item" to="/login">Login</router-link>
-                <router-link v-if="isAdmin" class="dropdown-item" to="/admin" id="admin">ADMIN</router-link>
-                <router-link v-if="isAdmin" class="dropdown-item" to="/users">Utenti</router-link>
-                <button v-if="isLoggedIn" class="dropdown-item" @click="logout" id="logout">Logout</button>
+                <router-link v-if="!isAdmin" class="dropdown-item" to="/register" @click="hideDropdown">Registrati</router-link>
+                <router-link v-if="!isAdmin" class="dropdown-item" to="/login" @click="hideDropdown">Login</router-link>
+                <router-link v-if="isAdmin" class="dropdown-item" to="/add-bet" id="admin" @click="hideDropdown">ADMIN</router-link>
+                <router-link v-if="isAdmin" class="dropdown-item" to="/users" @click="hideDropdown">Utenti</router-link>
+                <button v-if="isLoggedIn" class="dropdown-item" @click="logout" id="logout" >Logout</button>
               </div>
             </div>
           </div>
@@ -49,7 +49,7 @@
 import { ref, onMounted } from 'vue';
 import { auth } from './firebase/firebaseConfig.js';
 import { onAuthStateChanged } from 'firebase/auth';
-
+import { onBeforeUnmount } from 'vue';
 export default {
   name: 'App',
   data() {
@@ -57,6 +57,21 @@ export default {
       isLoggedIn: false,
       dropdownIsActive: false,
     };
+  },
+  directives: {
+    clickOutside: {
+      beforeMount(el, binding) {
+        el.clickOutsideEvent = function(event) {
+          if (!(el === event.target || el.contains(event.target))) {
+            binding.value(event);
+          }
+        };
+        document.body.addEventListener('click', el.clickOutsideEvent);
+      },
+      beforeUnmount(el) {
+        document.body.removeEventListener('click', el.clickOutsideEvent);
+      },
+    },
   },
   setup() {
     const currentUserEmail = ref(null);
@@ -99,6 +114,9 @@ export default {
     },
     accountHover() {
       this.dropdownIsActive = !this.dropdownIsActive;
+    },
+    hideDropdown() {
+      this.dropdownIsActive = false;
     }
   }
 }
