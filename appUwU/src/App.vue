@@ -15,16 +15,16 @@
         <div class="navbar-end">
           <div class="dropdown navbar-item has-dropdown is-hoverable" >
             <div class="dropdown-trigger">
-              <button id="accountBottone" class="button" @click="dropdownIsActive = !dropdownIsActive" aria-haspopup="true"
+              <button id="accountBottone" class="button" @click="accountHover" aria-haspopup="true"
                 aria-controls="dropdown-menu"> <span>Account</span>
                 <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
               </button>
             </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu" >
-              <div class="dropdown-content">
-                <router-link v-if="!isLoggedIn" class="dropdown-item" to="/login">Login</router-link>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu"   >
+              <div class="dropdown-content"  >
+                <router-link v-if="!isLoggedIn" class="navbar-item" to="/login">Login</router-link>
                 <router-link v-if="!isLoggedIn" class="dropdown-item" to="/register">Registrati</router-link>
                 <hr class="dropdown-divider">
                 <router-link v-if="isLoggedIn" class="dropdown-item" to="/account">Account</router-link>
@@ -98,6 +98,13 @@ export default {
       }).catch((error) => {
         console.error('Error logging out:', error);
       });
+    },
+    accountHover(){
+      if(dropdownIsActive){
+        dropdownIsActive= false;
+      }else{
+        dropdownIsActive=true;
+      }
     }
   }
 }
