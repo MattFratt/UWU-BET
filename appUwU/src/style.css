@@ -37,11 +37,10 @@ textarea {
 
 
 
-
 body {
   font-family: Arial, sans-serif;
   color: #333;
-  /*background-image: url('https://giffiles.alphacoders.com/233/23367.gif');*/
+  background-image: url('https://i.pinimg.com/originals/e9/e8/b8/e9e8b87303ddaa016f8a1759c02c9319.jpg');
 
   background-repeat: no-repeat;
   background-size: cover;
@@ -84,7 +83,7 @@ footer {
 }
 
 .scommessa {
-  background-color: rgb(175, 108, 21, 0.5);
+  background-color: aquamarine;
   font-size: large;
 
 }
