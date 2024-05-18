@@ -6,25 +6,6 @@
 
     <h1 v-if="isLoggedIn" class="title" id="accountAccesso">Bentornato <div class="emailMain">{{ currentUserEmail }}
       </div> ! </h1>
-    <!-- Visualizza la lista degli utenti 
-    <div class="dropdown" :class="{ 'is-active': showUsers }">
-      <div class="dropdown-trigger">
-        <button class="button" @click="showUsers = !showUsers">
-          <span>Utenti</span>
-          <span class="icon is-small">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </div>
-      <div class="dropdown-menu" id="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <a v-for="user in users" :key="user.id" class="dropdown-item">
-            {{ user.email }} - Saldo: <span class="tag is-success">{{ user.money }}</span>
-          </a>
-        </div>
-      </div>
-    </div>
-                    -->
     <!-- Visualizza il saldo dell'utente -->
     <p class="tag is-info">UwU disponibili: {{ money }}</p>
 
@@ -54,6 +35,7 @@ import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore'
 import { auth } from '../firebase/firebaseConfig.js';
 import { loadUsers } from '../services/userService';
 import { onAuthStateChanged } from 'firebase/auth';
+import Swal from 'sweetalert2'
 
 export default {
   name: 'Home',
@@ -136,19 +118,40 @@ export default {
     },
     async placeBet(bet) {
       if (!auth.currentUser) {
-        alert('Per favore effettua il login per scommettere!');
+        Swal.fire({
+          icon: 'error',
+          title: 'aiaiai...',
+          text: 'Porfa effettua il login per scommettere ddai!',
+        });
         console.error('Utente non autenticato');
         return;
       }
 
       if (this.isExpired(bet)) {
-        alert('La scommessa è scaduta!');
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'La scommessa è scaduta!',
+        });
         return;
       }
 
-      const betAmount = parseInt(prompt('Quanto vuoi scommettere?', '0'));
-      if (isNaN(betAmount) || betAmount <= 0) {
-        alert('Per favore inserisci un importo valido!');
+      let betAmount = 0;
+      const { value: amount } = await Swal.fire({
+        title: 'Quanto vuoi scommettere?',
+        input: 'number',
+        inputValue: '0',
+        inputPlaceholder: 'Inserisci un importo',
+        inputValidator: (value) => {
+          if (!value || isNaN(value) || value <= 0) {
+            return 'Per favore inserisci un importo valido!'
+          }
+        }
+      });
+
+      if (amount) {
+        betAmount = parseInt(amount);
+      } else {
         return;
       }
 
@@ -161,7 +164,11 @@ export default {
       const userDoc = await getDoc(doc(db, 'users', user.email));
       const currentMoney = userDoc.data().money;
       if (betAmount > currentMoney) {
-        alert('Non hai abbastanza denaro per questa scommessa!');
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Non hai abbastanza denaro per questa scommessa!',
+        });
         return;
       }
 
@@ -187,7 +194,11 @@ export default {
 
         await updateDoc(betRef, { users });
         this.loadUserMoney();
-        alert('Scommessa effettuata con successo!');
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Scommessa effettuata con successo!',
+        });
       } catch (error) {
         console.error('Errore nell\'aggiornare le informazioni della scommessa:', error);
       }

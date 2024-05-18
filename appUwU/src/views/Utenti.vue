@@ -35,6 +35,7 @@
 import { ref } from 'vue';
 import { db } from '../firebase/firebaseConfig.js';
 import { collection, onSnapshot, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
+import Swal from 'sweetalert2';
 
 export default {
     data() {
@@ -43,41 +44,20 @@ export default {
         };
     },
     created() {
-        try {
-            const usersCollection = collection(db, 'users');
-            onSnapshot(usersCollection, async (snapshot) => {
-                const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), bets: [] }));
-
-                console.log('Fetched users:', users);
-
-                const betsCollection = collection(db, 'scommesse');
-                const betsSnapshot = await getDocs(betsCollection);
-                const bets = betsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                console.log('Fetched bets:', bets);
-
-                for (const user of users) {
-                    for (const bet of bets) {
-                        if (bet.users && bet.users[user.email]) {
-                            user.bets.push({ id: bet.id, title: bet.title, amount: bet.users[user.email] });
-                        }
-                    }
-                }
-
-                console.log('Processed users:', users);
-
-                this.users = users;
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        this.fetchData();
     },
     methods: {
         async removeUserFromBet(userEmail, betId) {
-            const result = window.prompt(`Did ${userEmail} win or lose bet ${betId}? Enter 'win' or 'lose'.`);
+            const { isConfirmed } = await Swal.fire({
+                title: `${userEmail} ha vinto o perso?`,
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: `Vittoria`,
+                denyButtonText: `Sconfitta`,
+                confirmButtonColor: '#00ff22',
+            });
 
-            if (result !== 'win' && result !== 'lose') {
-                alert('Invalid input. Please enter "win" or "lose".');
+            if (!isConfirmed) {
                 return;
             }
 
@@ -91,32 +71,30 @@ export default {
                     const userSnapshot = await getDoc(userRef);
                     const userData = userSnapshot.data();
 
-                    if (result === 'win') {
-                        const prize = betData.users[userEmail] * betData.quota;
-                        alert(`The prize for ${userEmail} is ${prize}.`);
+                    const prize = betData.users[userEmail] * betData.quota;
+                    await Swal.fire(`La vincita per ${userEmail} è di ${prize} Uwu!`);
+                    // Add the prize to the user's current money
+                    const newMoney = userData.money + prize;
 
-                        // Add the prize to the user's current money
-                        const newMoney = userData.money + prize;
+                    // Update the user's money in the database
+                    await updateDoc(userRef, { money: newMoney });
 
-                        // Update the user's money in the database
-                        await updateDoc(userRef, { money: newMoney });
-
-                        // Update the user's max win and highest balance if necessary
-                        if (!userData.maxWin || prize > userData.maxWin) {
-                            await updateDoc(userRef, { maxWin: prize });
-                        }
-                        if (!userData.highestBalance || newMoney > userData.highestBalance) {
-                            await updateDoc(userRef, { highestBalance: newMoney });
-                        }
-
-                        console.log(`Added ${prize} to ${userEmail}'s money.`);
+                    // Update the user's max win and highest balance if necessary
+                    if (!userData.maxWin || prize > userData.maxWin) {
+                        await updateDoc(userRef, { maxWin: prize });
                     }
+                    if (!userData.highestBalance || newMoney > userData.highestBalance) {
+                        await updateDoc(userRef, { highestBalance: newMoney });
+                    }
+
+                    console.log(`Added ${prize} to ${userEmail}'s money.`);
 
                     delete betData.users[userEmail];
 
                     await updateDoc(betRef, { users: betData.users });
 
                     console.log(`Removed ${userEmail} from bet ${betId}`);
+                    this.fetchData();
 
                     // Close bet
                     this.closeBet(betId);
@@ -133,6 +111,37 @@ export default {
             await updateDoc(betRef, { closed: true });
 
             console.log(`Closed bet ${betId}`);
+        },
+
+        async fetchData() {
+            try {
+                const usersCollection = collection(db, 'users');
+                onSnapshot(usersCollection, async (snapshot) => {
+                    const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), bets: [] }));
+
+                    console.log('Fetched users:', users);
+
+                    const betsCollection = collection(db, 'scommesse');
+                    const betsSnapshot = await getDocs(betsCollection);
+                    const bets = betsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    console.log('Fetched bets:', bets);
+
+                    for (const user of users) {
+                        for (const bet of bets) {
+                            if (bet.users && bet.users[user.email]) {
+                                user.bets.push({ id: bet.id, title: bet.title, amount: bet.users[user.email] });
+                            }
+                        }
+                    }
+
+                    console.log('Processed users:', users);
+
+                    this.users = users;
+                });
+            } catch (error) {
+                console.error(error);
+            }
         },
     },
 }
