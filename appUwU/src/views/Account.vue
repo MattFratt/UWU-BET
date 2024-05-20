@@ -1,28 +1,40 @@
 <template>
-    <section class="section">
-        <div class="container" @keydown.enter="login">
-            <header>
-                <h1 class="title" id="email">{{ this.email }}</h1>
-            </header>
-            <main class="boxerellino">
-                <article class="container">
-                    <h2 class="title">Giocate recenti</h2>
-                    <ul>
-                        <li v-for="(game, index) in recentGames" :key="index">{{ game }}</li>
-                    </ul>
-                    <h3 class="title">Vincita massima</h3>
-                    <p>{{ maxWin }}</p>
-                </article>
-                <article class="container">
-                    <h2 class="title">Saldo attuale</h2>
-                    <p>{{ currentBalance }}</p>
-                    <h3 class="title">Massimo storico</h3>
-                    <p>{{ highestBalance }}</p>
+    <div class="columns">
+        <div class="column is-1">
 
-                </article>
-            </main>
+
         </div>
-    </section>
+        <div class="column is-10">
+            <div class="paginona">
+                <div class="container">
+
+
+                    <h1 class="title" id="email">{{ this.email }}</h1>
+
+                    <div class="boxerellino">
+                        <article class="container">
+                            <h2 class="title">Giocate recenti</h2>
+                            <ul>
+                                <li v-for="(game, index) in recentGames" :key="index">{{ game }}</li>
+                            </ul>
+                            <h3 class="title">Vincita massima</h3>
+                            <p>{{ maxWin }}</p>
+                        </article>
+                        <article class="container">
+                            <h2 class="title">Saldo attuale</h2>
+                            <p>{{ currentBalance }}</p>
+                            <h3 class="title">Massimo storico</h3>
+                            <p>{{ highestBalance }}</p>
+
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 </template>
 
 <script>
@@ -115,4 +127,10 @@ p {
     color: #c9c9c9;
     line-height: 1.6;
 }
+
+.paginona{
+    overflow-y: auto;
+    max-height: 75vh;
+
+  }
 </style>

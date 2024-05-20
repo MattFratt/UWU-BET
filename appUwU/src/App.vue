@@ -1,4 +1,29 @@
 <template>
+
+  <aside class="menu">
+
+    <p class="menu-label"><u>SCOMMESSE</u></p>
+    <ul class="menu-list">
+      <li><a>Schedina</a></li>
+      <li><a>Lotto presenze</a></li>
+      <li><a>Pagelle</a></li>
+      <li><a>Promossi/Bocciati</a></li>
+      <li><a>Voti verifiche</a></li>
+      <li><a>Debiti?</a></li>
+      <li><a>Ruota Mattiellica</a></li>
+    </ul>
+    <p class="menu-label"><u>FLEXATORI</u></p>
+    <!-- fare vfor con array (da creare) con i flexatori-->
+    <p class="menu-label"><u>GAMBLER DELLA SETTIMANA</u> <br>(chi ha ballato più fresca)</p>
+    <ul class="menu-list">
+    <li><a>1. </a></li>
+    <li><a>2. </a></li>
+    <li><a>3. </a></li>
+    <!-- stra da fare meglio-->
+  </ul>
+  </aside>
+
+
   <div id="app" class="has-navbar-fixed-top">
     <header class="navbar">
       <div class="navbar-content">
@@ -148,6 +173,7 @@ export default {
 
 .navbar-content {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
@@ -182,4 +208,42 @@ export default {
 #logout {
   color: red;
 }
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  color: #000000;
+  margin-bottom: 10px;
+  background-color: #fff;
+  padding: 0.2vh;
+
+  border-radius: 5px;
+}
+
+.menu {
+  display: block;
+  position: absolute;
+  top: 10vh;
+  width: 25vh;
+  left: 0%;
+  z-index: 20;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-style: solid;
+  border-width: 1vh;
+  border-color: black;
+  overflow-y: auto;
+  max-height: 85.3%;
+  bottom: 0;
+
+}
+
+.menu-label {
+  padding-left: 1em;
+  padding-top: 1em;
+  color: #000000;
+}
+
 </style>

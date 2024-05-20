@@ -1,4 +1,5 @@
 <template>
+  <div class="paginona">
   <div class="notification is-warning is-light" id="notifica">
     <button class="delete" @click="togliAlert"></button>
     <b>ATTENZIONE!</b> <br>
@@ -31,6 +32,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -38,7 +40,7 @@ import { ref } from 'vue';
 import { auth, db } from '../firebase/firebaseConfig.js';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import router from '../router/index.js'; 
+import router from '../router/index.js';
 
 export default {
   data() {

@@ -1,33 +1,43 @@
 <template>
-    <div class="container">
-        <h2 class="title">Utenti</h2>
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>UwU</th>
-                    <th>Scommesse in corso</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="user in users" :key="user.id">
-                    <td>{{ user.email }}</td>
-                    <td id="money">{{ user.money }}</td>
-                    <td>
-                        <ul>
-                            <li v-for="bet in user.bets" :key="bet.id">
-                                <p class="subtitle is-6" v-if="!bet.closed"
-                                    @click="removeUserFromBet(user.email, bet.id)">{{ bet.title }}
-                                    - {{ bet.amount }}</p>
-                            </li>
-                        </ul>
-                    </td> <!-- Utilizziamo una funzione per formattare le scommesse -->
-                    <td>
+    <div class="columns">
+        <div class="column is-1">
 
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+        </div>
+        <div class="column is-10">
+            <div class="container">
+                <h2 class="title">Utenti</h2>
+                <div class="paginona">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>UwU</th>
+                                <th>Scommesse in corso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="user in users" :key="user.id">
+                                <td>{{ user.email }}</td>
+                                <td id="money">{{ user.money }}</td>
+                                <td>
+                                    <ul>
+                                        <li v-for="bet in user.bets" :key="bet.id">
+                                            <p class="subtitle is-6" v-if="!bet.closed"
+                                                @click="removeUserFromBet(user.email, bet.id)">{{ bet.title }}
+                                                - {{ bet.amount }}</p>
+                                        </li>
+                                    </ul>
+                                </td> <!-- Utilizziamo una funzione per formattare le scommesse -->
+                                <td>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -196,5 +206,9 @@ li {
 
 #money {
     color: #00ff22;
+}
+
+.paginona {
+    max-height: 67vh;
 }
 </style>

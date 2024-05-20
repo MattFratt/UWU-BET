@@ -49,8 +49,7 @@ textarea {
 body {
   font-family: Arial, sans-serif;
   color: #333;
-  background-image: url('https://i.pinimg.com/originals/e9/e8/b8/e9e8b87303ddaa016f8a1759c02c9319.jpg');
-
+  background-image: url('assets/sfvondo.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -106,13 +105,18 @@ footer {
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 5px;
+  position: relative;
+  bottom: 2vh;
   text-align: center;
   color: aliceblue;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 
 }
+
+
+
 #notifica{
   display: block;
   position: absolute;
@@ -124,4 +128,11 @@ footer {
 #daBlurare{
   filter: none;
 }
+
+.paginona{
+  overflow-y: auto;
+  max-height: 50vh;
+
+}
+
 

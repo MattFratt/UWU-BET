@@ -1,31 +1,46 @@
 <template>
+  <div class="columns">
+    <div class="column is-1">
 
-  <div class="container">
-    <p class="title">Benvenuto nel miglior sito di scommesse doliche</p> <br>
-    <p class="subtitle" v-if="!isLoggedIn">Accedi o registrati per iniziare a scommettere!</p>
 
-    <h1 v-if="isLoggedIn" class="title" id="accountAccesso">Bentornato <div class="emailMain">{{ currentUserEmail }}
-      </div> ! </h1>
-    <!-- Visualizza il saldo dell'utente -->
-    <p class="tag is-info">UwU disponibili: {{ money }}</p>
-
-    <!-- Visualizza le scommesse recenti -->
-    <div class="container" v-if="bets.length > 0">
-      <h3 class="title">Scommesse recenti</h3>
-      <ul>
-        <li v-for="bet in bets" :key="bet.id">
-          <div class="scommessa"> {{ bet.title }} | Quota: {{ bet.quota }}</div>
-          <div>Scadenza: {{ getRemainingTime(bet.expiryDate) }}</div>
-          <button class="button is-danger" @click="placeBet(bet)" v-bind:disabled="isExpired(bet)">Scommetti
-            subito!</button>
-        </li>
-      </ul>
     </div>
-    <div v-else>
-      <p>Nessuna scommessa disponibile al momento.</p>
+
+    <div class="column is-10">
+
+      <div class="container">
+
+        <p class="title">Benvenuto nel miglior sito di scommesse doliche</p> <br>
+        <p class="subtitle" v-if="!isLoggedIn">Accedi o registrati per iniziare a scommettere!</p>
+
+        <h1 v-if="isLoggedIn" class="title" id="accountAccesso">Bentornato <div class="emailMain">{{ currentUserEmail
+            }}
+          </div> ! </h1>
+        <!-- Visualizza il saldo dell'utente -->
+        <p class="tag is-info">UwU disponibili: {{ money }}</p>
+
+        <!-- Visualizza le scommesse recenti -->
+        <div class="container" v-if="bets.length > 0">
+
+          <h3 class="title">Scommesse recenti</h3>
+          <div class="paginona">
+            <ul>
+              <li v-for="bet in bets" :key="bet.id">
+                <div class="scommessa"> {{ bet.title }} | Quota: {{ bet.quota }}</div>
+                <div>Scadenza: {{ getRemainingTime(bet.expiryDate) }}</div>
+                <button class="button is-danger" @click="placeBet(bet)" v-bind:disabled="isExpired(bet)">Scommetti
+                  subito!</button>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+        <div v-else>
+          <p>Nessuna scommessa disponibile al momento.</p>
+        </div>
+
+      </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -285,7 +300,7 @@ li {
   color: #000000;
   margin-bottom: 10px;
   background-color: #fff;
-  padding: 10px;
+  padding: 0.1vh;
   border-radius: 5px;
 }
 
