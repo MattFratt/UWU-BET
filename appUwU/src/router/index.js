@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Account from '../views/Account.vue';
 import Users from '../views/Utenti.vue';
+import Ruota from '../views/Ruota.vue';
 
 
 const routes = [
@@ -13,7 +14,8 @@ const routes = [
   { path: '/login', name: 'Login', component: Login },
   { path: '/register', name: 'Register', component: Register },
   { path: '/account', name: 'Account', component: Account },
-  { path: '/users', name: 'Users', component: Users }
+  { path: '/users', name: 'Users', component: Users },
+  { path: '/ruota', name: 'Ruota', component: Ruota }
 ];
 
 const router = createRouter({

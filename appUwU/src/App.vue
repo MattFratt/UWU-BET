@@ -10,17 +10,18 @@
       <li><a>Promossi/Bocciati</a></li>
       <li><a>Voti verifiche</a></li>
       <li><a>Debiti?</a></li>
-      <li><a>Ruota Mattiellica</a></li>
+      <li><router-link to="/ruota">Ruota Matiellica</router-link></li>
+
     </ul>
     <p class="menu-label"><u>FLEXATORI</u></p>
     <!-- fare vfor con array (da creare) con i flexatori-->
     <p class="menu-label"><u>GAMBLER DELLA SETTIMANA</u> <br>(chi ha ballato più fresca)</p>
     <ul class="menu-list">
-    <li><a>1. </a></li>
-    <li><a>2. </a></li>
-    <li><a>3. </a></li>
-    <!-- stra da fare meglio-->
-  </ul>
+      <li><a>1. </a></li>
+      <li><a>2. </a></li>
+      <li><a>3. </a></li>
+      <!-- stra da fare meglio-->
+    </ul>
   </aside>
 
 
@@ -245,5 +246,4 @@ li {
   padding-top: 1em;
   color: #000000;
 }
-
 </style>
