@@ -68,7 +68,23 @@ export default {
             });
 
             if (!isConfirmed) {
-                return;
+                const betRef = doc(db, 'scommesse', betId);
+                const betSnapshot = await getDoc(betRef);
+                const betData = betSnapshot.data();
+                console.log("eliminare utente da bet");
+                const userRef = doc(db, 'users', userEmail);
+                const userSnapshot = await getDoc(userRef);
+                const userData = userSnapshot.data();
+
+                delete betData.users[userEmail];
+
+                await updateDoc(betRef, { users: betData.users });
+
+                console.log(`Removed ${userEmail} from bet ${betId}`);
+                this.fetchData();
+
+                // Close bet
+                this.closeBet(betId);
             }
 
             try {
